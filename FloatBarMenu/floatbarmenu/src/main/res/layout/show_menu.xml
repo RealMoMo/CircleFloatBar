@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hht.floatbar.view.CircleLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/circle_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:changeCorner="270"
+    app:radium="35dp">
+
+
+    <ImageView
+        android:id="@+id/im_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_home" />
+
+    <ImageView
+        android:id="@+id/im_annotation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_annotation" />
+
+    <ImageView
+        android:id="@+id/im_whiteboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_whiteboard" />
+
+    <ImageView
+        android:id="@+id/im_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_task" />
+
+    <ImageView
+        android:id="@+id/im_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_back" />
+
+    <ImageView
+        android:id="@+id/im_windows"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/selector_window" />
+
+
+</com.hht.floatbar.view.CircleLayout>
+
+
