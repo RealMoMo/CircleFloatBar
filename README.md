@@ -1,9 +1,10 @@
 ## CirCleFloatBar
 
 ### Gif
-
+触摸icon的缩放动画 & 无触摸后定时的透明动画
 ![image](https://github.com/RealMoMo/CircleFloatBar/blob/master/gif/alpha.gif)
-
+展开与隐藏菜单的位移+缩放动画 & 
+贝塞尔曲线位移动画 （通过广播带坐标信息，让CircleFloatBar移动该处）
 ![image](https://github.com/RealMoMo/CircleFloatBar/blob/master/gif/move_show.gif)
 
 ### 项目结构
