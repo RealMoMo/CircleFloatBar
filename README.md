@@ -1,6 +1,11 @@
 ## CirCleFloatBar
-
+    圆形悬浮窗菜单。(并没有做6.0动态权限申请，下载Demo的apk，请各大神自己手动开启权限)
 ### Gif
+实际项目效果(撸多了，手抖请笑纳)
+
+![image](https://github.com/RealMoMo/CircleFloatBar/blob/master/gif/real_demo.gif)
+
+精简实际项目效果(核心效果逻辑保留)
 触摸icon的缩放动画 & 无触摸后定时的透明动画
 
 ![image](https://github.com/RealMoMo/CircleFloatBar/blob/master/gif/alpha.gif)
@@ -13,6 +18,9 @@
 ### 项目结构
 
 ![image](https://github.com/RealMoMo/CircleFloatBar/blob/master/gif/project.png)
+
+
+
 
 
 ### Thanks
