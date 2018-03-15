@@ -86,6 +86,12 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     //是否展开的flag
     private boolean isShowing = false;
 
+    private int displayWidth;
+    private int displayHeight;
+    //FloatBarMenu默认坐标
+    private float defaultX = 1400;
+    private float defaultY = 500;
+
 
     // 点击坐标
     private float x, y;
@@ -143,8 +149,8 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     private FloatBarReceiver mFloatBarReceiver;
 
 
-    //TODO 双指移动的广播（伪广播 自己测试用）
-    private static final String ACTION_MOVE_POSITION = "com.hht.two.finger.move";
+    //双指移动的广播
+    private static final String ACTION_MOVE_POSITION = "hht.action.two.finger.touch";
 
     //=================================================================
 
@@ -164,9 +170,8 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
                     mHanlder.removeMessages(WHAT_APLHA_ALL);
                     mHanlder.sendEmptyMessage(WHAT_APLHA_CANCEL);
                     Random random = new Random();
-                    //TODO 获取屏幕宽度
-                    int x = random.nextInt(1920) % 1920;
-                    int y = random.nextInt(1080) % (1080);
+                    int x = random.nextInt(displayWidth) % displayWidth;
+                    int y = random.nextInt(displayHeight) % (displayHeight);
                     if (isShowing) {
                         x -= showMenuHalfSize;
                         y -= showMenuHalfSize;
@@ -174,7 +179,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
                         x -= hideMenuHalfSize;
                         y -= hideMenuHalfSize;
                     }
-                    doPathAnimation(x, y);
+                    startPathAnimation(x, y,isShowing);
                     mHanlder.sendEmptyMessageDelayed(WHAT_APLHA_HALF, FIVETHOUSAND_MILLSECOND);
                 }
                 break;
@@ -338,6 +343,11 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
 
     private void createFloatBarView() {
+        displayHeight = getResources().getDisplayMetrics().heightPixels;
+        displayWidth = getResources().getDisplayMetrics().widthPixels;
+        defaultX = displayWidth * 0.9f;
+        defaultY = displayHeight / 2;
+
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         params = new WindowManager.LayoutParams();
         params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
@@ -726,7 +736,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 final float fraction = valueAnimator.getAnimatedFraction();
-                final float value = (float) valueAnimator.getAnimatedValue();
+                //final float value = (float) valueAnimator.getAnimatedValue();
 
                 for (int i = 0; i < menuItemCount; i++) {
                     float angle = angleStep * (i + 2) - 90;
@@ -758,16 +768,110 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     }
 
 
-    //test path animation
+    //path animation
     private BezierEvaluator evaluator;
 
-    private void doPathAnimation(int x, int y) {
+    /**
+     *  start path animation
+     * @param x  menu center move to screen coordinate x
+     * @param y  menu center move to screen coordinate y
+     * @param needHidden  need hidden menu animation
+     */
+    private void startPathAnimation(int x,int y, boolean needHidden){
+        if(animationRunning){
+            return;
+        }
+        if(needHidden){
+            doPathHideMenuAnimation(x,y);
+        }else{
+            doPathAnimation(x,y);
+        }
+    }
 
+    /**
+     *  hide menu animation when start path animation
+     * @param x  menu center move to screen coordinate x
+     * @param y  menu center move to screen coordinate y
+     */
+    private void doPathHideMenuAnimation(final int x ,final int y) {
+
+        ValueAnimator hideMenu = ValueAnimator.ofFloat(0f, 1f);
+        hideMenu.setInterpolator(new LinearInterpolator());
+        hideMenu.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                animationRunning = true;
+                for (ImageView view : views) {
+                    view.setScaleX(1f);
+                    view.setScaleY(1f);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+
+                imShowingMenu.setScaleX(1f);
+                imShowingMenu.setScaleY(1f);
+
+                isShowing = false;
+                wm.removeView(showMenuView);
+                params.x = params.x + showMenuHalfSize - hideMenuHalfSize;
+                params.y = params.y + showMenuHalfSize - hideMenuHalfSize;
+                wm.addView(hideMenuView, params);
+                wm.updateViewLayout(hideMenuView, params);
+
+                doPathAnimation(x+showMenuHalfSize - hideMenuHalfSize,y+ showMenuHalfSize - hideMenuHalfSize);
+
+
+            }
+        });
+        hideMenu.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                final float fraction = valueAnimator.getAnimatedFraction();
+                final float value = (float) valueAnimator.getAnimatedValue();
+
+                for (int i = 0; i < menuItemCount; i++) {
+                    float angle = angleStep * i - 90;
+
+                    float x = (float) Math.cos(Math.toRadians(angle + 120 * fraction)) * (circleLayout.getRadius() - hideMenuHalfSize * fraction);
+                    float y = (float) Math.sin(Math.toRadians(angle + 120 * fraction)) * (circleLayout.getRadius() - hideMenuHalfSize * fraction);
+
+                    ImageView button = views.get(i);
+                    button.setX(circleLayout.getCenterX() + x - imShowingMenu.getWidth());
+                    button.setY(circleLayout.getCenterY() + y - imShowingMenu.getHeight());
+                    button.setScaleX(1f - 0.7f * fraction);
+                    button.setScaleY(1f - 0.7f * fraction);
+                    //hide center img:30px  show center img:20px ->scale(1+0.5)
+                    imShowingMenu.setScaleX(1f + 0.5f * fraction);
+                    imShowingMenu.setScaleY(1f + 0.5f * fraction);
+                }
+            }
+        });
+
+        hideMenu.setDuration(DURATION_SHRINK_ANIMATION);
+        hideMenu.start();
+        ;
+    }
+
+    /**
+     *  do bezier path animation
+     * @param x  menu center move to screen coordinate x
+     * @param y  menu center move to screen coordinate y
+     */
+    private void doPathAnimation(final int x,final int y) {
+        int controllY = y<params.y?y-150:params.y-150;
+        controllY = controllY<0?0:controllY;
         if (evaluator == null) {
-            Point controll = new Point((x + params.x) / 2, (y + params.y) / 2 - 100);
+            //controllY first plan:
+            // Point controll = new Point((x + params.x) / 2, (y + params.y) / 2 - 150);
+            //controll second plan:
+            Point controll = new Point((x + params.x) / 2, controllY);
             evaluator = new BezierEvaluator(controll);
         } else {
-            evaluator.setControllPoint((x + params.x) / 2, (y + params.y) / 2 - 100);
+            //evaluator.setControllPoint((x + params.x) / 2, (y + params.y) / 2 - 150);
+            evaluator.setControllPoint((x + params.x) / 2, controllY);
         }
 
         Point startPosition = new Point(params.x, params.y);
@@ -775,10 +879,26 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
         ValueAnimator anim = ValueAnimator.ofObject(evaluator, startPosition, endPosition);
         anim.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                animationRunning = true;
+            }
+
             @Override
             public void onAnimationEnd(Animator animation) {
 
+                //mHanlder.sendEmptyMessageDelayed(WHAT_RECT_TOUCH, ONEHUNDRED_MILLSECOND);
 
+                isShowing = true;
+                wm.removeView(hideMenuView);
+                //-42
+                params.x = params.x - (showMenuHalfSize - hideMenuHalfSize);
+                params.y = params.y - (showMenuHalfSize - hideMenuHalfSize);
+                wm.addView(showMenuView, params);
+                wm.updateViewLayout(showMenuView, params);
+
+                startShowMenuAnimation();
             }
         });
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -788,7 +908,6 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
                 params.x = point.x;
                 params.y = point.y;
                 if (isShowing) {
-
                     wm.updateViewLayout(showMenuView, params);
                 } else {
                     wm.updateViewLayout(hideMenuView, params);
@@ -803,6 +922,50 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
 
     }
+
+
+//    private void doPathAnimation(int x, int y) {
+//
+//        if (evaluator == null) {
+//            Point controll = new Point((x + params.x) / 2, (y + params.y) / 2 - 100);
+//            evaluator = new BezierEvaluator(controll);
+//        } else {
+//            evaluator.setControllPoint((x + params.x) / 2, (y + params.y) / 2 - 100);
+//        }
+//
+//        Point startPosition = new Point(params.x, params.y);
+//        Point endPosition = new Point(x, y);
+//
+//        ValueAnimator anim = ValueAnimator.ofObject(evaluator, startPosition, endPosition);
+//        anim.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//
+//
+//            }
+//        });
+//        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                Point point = (Point) animation.getAnimatedValue();
+//                params.x = point.x;
+//                params.y = point.y;
+//                if (isShowing) {
+//
+//                    wm.updateViewLayout(showMenuView, params);
+//                } else {
+//                    wm.updateViewLayout(hideMenuView, params);
+//                }
+//
+//
+//            }
+//        });
+//        anim.setDuration(DURATION_PATH_MOVE_ANIMATION);
+//        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+//        anim.start();
+//
+//
+//    }
 
 
 
