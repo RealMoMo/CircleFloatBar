@@ -3,11 +3,6 @@ package com.hht.floatbar.module.web;
 import android.app.Activity;
 import android.content.Intent;
 
-
-
-
-
-
 public class WebPresenter implements WebContract.IWebPresenter {
     private WebContract.IWebView mWebView;
     private String mGankUrl;
