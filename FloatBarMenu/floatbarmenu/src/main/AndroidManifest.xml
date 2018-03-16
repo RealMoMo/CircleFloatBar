@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 
     <application
@@ -26,6 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".module.web.WebViewActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <service
             android:name="com.hht.floatbar.service.FloatbarService"

@@ -7,8 +7,24 @@
     tools:context="com.hht.floatbar.MainActivity">
 
     <TextView
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="24sp"
         android:text="CircleFloatBar" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:onClick="jumpToGithub"
+        android:layout_gravity="right|bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_start"
+        app:backgroundTint="#f00"
+        app:borderWidth="0dp"
+        app:elevation="20dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="30dp"
+        app:rippleColor="#0ff" />
 
 </FrameLayout>

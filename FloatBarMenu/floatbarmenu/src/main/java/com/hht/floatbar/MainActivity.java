@@ -3,11 +3,16 @@ package com.hht.floatbar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 
+import com.hht.floatbar.module.web.WebViewActivity;
 import com.hht.floatbar.service.FloatbarService;
 
 public class MainActivity extends AppCompatActivity {
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +23,16 @@ public class MainActivity extends AppCompatActivity {
         startService(service);
 
 
+
+    }
+
+
+
+    public void jumpToGithub(View view) {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra("title","我的GitHub,欢迎Star");
+        intent.putExtra("url","https://github.com/RealMoMo");
+        this.startActivity(intent);
 
     }
 }
