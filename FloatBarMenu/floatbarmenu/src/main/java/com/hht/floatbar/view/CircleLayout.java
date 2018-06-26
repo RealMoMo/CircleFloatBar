@@ -274,7 +274,7 @@ public class CircleLayout extends ViewGroup {
      * @param changeCorner 设置旋转角度
      */
     public void setChangeCorner(double changeCorner) {
-        this.mChangeCorner = mChangeCorner;
+        this.mChangeCorner = changeCorner;
         invalidate();
     }
 
