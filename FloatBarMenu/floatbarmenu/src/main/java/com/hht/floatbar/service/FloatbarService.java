@@ -31,6 +31,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+
 import com.hht.floatbar.R;
 import com.hht.floatbar.util.BezierEvaluator;
 import com.hht.floatbar.util.LogUtil;
