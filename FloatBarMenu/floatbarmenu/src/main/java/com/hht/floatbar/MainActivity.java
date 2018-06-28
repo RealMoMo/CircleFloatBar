@@ -35,4 +35,9 @@ public class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
 
     }
+
+    public void executePathAnimation(View view) {
+        Intent intent = new Intent("hht.action.two.finger.touch");
+        sendBroadcast(intent);
+    }
 }

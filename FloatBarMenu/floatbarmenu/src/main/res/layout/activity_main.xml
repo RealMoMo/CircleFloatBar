@@ -13,6 +13,13 @@
         android:textSize="24sp"
         android:text="CircleFloatBar" />
 
+    <Button
+        android:onClick="executePathAnimation"
+        android:text="Path Animation"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:onClick="jumpToGithub"
