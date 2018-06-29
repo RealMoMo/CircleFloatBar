@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +28,8 @@ import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -87,6 +90,10 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     //是否展开的flag
     private boolean isShowing = false;
 
+    private int[] mMenuLocation = new int[2];
+    //是否自动移动到屏幕边缘
+    private boolean mMoveEdge = false;
+
     private int displayWidth;
     private int displayHeight;
     //FloatBarMenu默认坐标
@@ -131,6 +138,8 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     private final int DURATION_TOUCH_ITEM_SCALE_ANIMATION = 200;
     //无触摸时透明度动画的时间
     private final int DURATION_NO_TOUCH_ALPHA_ANIMATION = 160;
+    //位移到边缘动画的时间
+    private final int DURATION_MOVE_EDGE_ANIMATION = 1500;
     //触摸item缩放min值
     private final float TOUCH_ITEM_SCALE_MIN_VALUE = 0.8f;
     //触摸item缩放max值
@@ -208,6 +217,10 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
                         getAlphaAnimation(hideMenuView, APLHA_NO_VALUE, APLHA_HALF_VALUE).start();
                     }
                     mHanlder.sendEmptyMessageDelayed(WHAT_APLHA_ALL, TENTHOUSAND_MILLSECOND);
+                    //test move to edge animation
+                    if(mMoveEdge){
+                        moveNearEdge();
+                    }
                 }
                 break;
                 case WHAT_APLHA_ALL: {
@@ -247,6 +260,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
         registerFloatBarReceiver();
 
+        initConfig();
         initView();
         initOnClickListener();
         initOnTouchEvent();
@@ -258,6 +272,8 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         mHanlder.sendEmptyMessageDelayed(WHAT_APLHA_HALF, FIVETHOUSAND_MILLSECOND);
     }
 
+
+
     private void registerFloatBarReceiver() {
         mFloatBarReceiver = new FloatBarReceiver();
         IntentFilter filter = new IntentFilter();
@@ -265,6 +281,9 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         registerReceiver(mFloatBarReceiver, filter);
     }
 
+    private void initConfig() {
+        mMoveEdge = true;
+    }
 
     private void initView() {
 
@@ -1092,6 +1111,54 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
             return false;
         }
 
+    }
+
+
+    /**
+     * 移至最近的边沿
+     */
+    private void moveNearEdge() {
+
+        int lastX = 0;
+        int width = 0;
+        if(isShowing){
+            showMenuView.getLocationOnScreen(mMenuLocation);
+            width = showMenuView.getWidth();
+        }else{
+            hideMenuView.getLocationOnScreen(mMenuLocation);
+            width = hideMenuView.getWidth();
+        }
+        int left = mMenuLocation[0];
+        if (left + width / 2 <= displayWidth / 2) {
+            lastX = 0;
+        } else {
+            lastX = displayWidth - width;
+        }
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(left, lastX);
+        valueAnimator.setDuration(DURATION_MOVE_EDGE_ANIMATION);
+        valueAnimator.setInterpolator(new BounceInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int left = (int) animation.getAnimatedValue();
+                params.x = left;
+                if (isShowing) {
+                    wm.updateViewLayout(showMenuView, params);
+                } else {
+                    wm.updateViewLayout(hideMenuView, params);
+                }
+            }
+        });
+        valueAnimator.start();
+    }
+
+    public void setAutoMoveEdge(boolean moveEdge){
+        mMoveEdge = moveEdge;
+    }
+
+    public boolean getAutoMoveEdge(){
+        return mMoveEdge;
     }
 
 

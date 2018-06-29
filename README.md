@@ -20,8 +20,16 @@
 ![image](https://github.com/RealMoMo/CircleFloatBar/blob/master/gif/project.png)
 
 
+### 版本
 
-
+* Version:1.1.0 
+</br>初次发布
+* Version:1.2.0
+</br>1.解决快速多次点击展开&隐藏菜单概率性崩溃bug。
+</br>2.优化PathAnimation，动态计算控制点。
+</br>3.优化逻辑。
+* Version:1.3.0
+</br>增加无触控，菜单自动吸附到屏幕边缘。
 
 ### Thanks
 	Everyone who has contributed code and reported issues and pull requests!
