@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void executePathAnimation(View view) {
-        Intent intent = new Intent("hht.action.two.finger.touch");
+        Intent intent = new Intent("com.realmo.two.finger.touch");
         sendBroadcast(intent);
     }
 }

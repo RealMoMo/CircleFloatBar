@@ -92,6 +92,9 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     //FloatBarMenu默认坐标
     private float defaultX = 1400;
     private float defaultY = 500;
+    // 设置PathAnimation控制点的x/y阈值
+    private  int thresholdX = 100;
+    private int thresholdY = 200;
 
 
     // 点击坐标
@@ -111,6 +114,8 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
     //==========================About Animator ====================================
 
+    private ValueAnimator hideMenuAnimation;
+    private ValueAnimator showMenuAnimation;
     //是否正在展开or隐藏Menu动画 flag
     private boolean animationRunning = false;
     //缩放动画
@@ -151,7 +156,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
 
     //双指移动的广播
-    private static final String ACTION_MOVE_POSITION = "hht.action.two.finger.touch";
+    private static final String ACTION_MOVE_POSITION = "com.realmo.two.finger.touch";
 
     //=================================================================
 
@@ -245,6 +250,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         initView();
         initOnClickListener();
         initOnTouchEvent();
+        initAnimation();
 
         createFloatBarView();
 
@@ -349,13 +355,16 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         defaultX = displayWidth * 0.9f;
         defaultY = displayHeight / 2;
 
+        thresholdX = (int)(getResources().getDisplayMetrics().widthPixels * 0.1f);
+        thresholdY = (int)(getResources().getDisplayMetrics().heightPixels * 0.1f);
+
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         params = new WindowManager.LayoutParams();
         params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.gravity = Gravity.LEFT | Gravity.TOP;
-        params.x = (int) (getResources().getDisplayMetrics().widthPixels * 0.9f);
-        params.y = getResources().getDisplayMetrics().heightPixels / 2;
+        params.x = (int) (displayHeight * 0.9f);
+        params.y = displayWidth / 2;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.format = PixelFormat.RGBA_8888;
@@ -386,6 +395,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
                 //执行隐藏菜单动画
                 if (!animationRunning) {
+                    animationRunning = true;
                     startHideMenuAnimation();
                 }
 
@@ -397,8 +407,10 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
                 // 显示展开菜单
                 if (!animationRunning) {
-                    isShowing = true;
-                    wm.removeView(hideMenuView);
+                    animationRunning = true;
+                    //wm.removeView(hideMenuView);
+                    wm.removeViewImmediate(hideMenuView);
+
                     params.x = params.x - (showMenuHalfSize - hideMenuHalfSize);
                     params.y = params.y - (showMenuHalfSize - hideMenuHalfSize);
 
@@ -406,7 +418,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 //                    params.height = WindowManager.LayoutParams.WRAP_CONTENT;
                     wm.addView(showMenuView, params);
                     wm.updateViewLayout(showMenuView, params);
-
+                    isShowing = true;
                     startShowMenuAnimation();
                 }
 
@@ -635,14 +647,17 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
     }
 
+    private void initAnimation(){
+        initHideMenuAnimation();
+        initShowMenuAnimation();
 
+    }
 
+    private void initHideMenuAnimation() {
 
-    private void startHideMenuAnimation() {
-
-        ValueAnimator hideMenu = ValueAnimator.ofFloat(0f, 1f);
-        hideMenu.setInterpolator(new LinearInterpolator());
-        hideMenu.addListener(new AnimatorListenerAdapter() {
+        hideMenuAnimation = ValueAnimator.ofFloat(0f, 1f);
+        hideMenuAnimation.setInterpolator(new LinearInterpolator());
+        hideMenuAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 animationRunning = true;
@@ -660,7 +675,8 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
                 imShowingMenu.setScaleY(1f);
 
                 isShowing = false;
-                wm.removeView(showMenuView);
+                //wm.removeView(showMenuView);
+                wm.removeViewImmediate(showMenuView);
                 //+42
                 params.x = params.x + showMenuHalfSize - hideMenuHalfSize;
                 params.y = params.y + showMenuHalfSize - hideMenuHalfSize;
@@ -672,18 +688,17 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
                 animationRunning = false;
 
 
+
             }
         });
-        hideMenu.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        hideMenuAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 final float fraction = valueAnimator.getAnimatedFraction();
-                final float value = (float) valueAnimator.getAnimatedValue();
+                //final float value = (float) valueAnimator.getAnimatedValue();
 
                 for (int i = 0; i < menuItemCount; i++) {
                     float angle = angleStep * i - 90;
-//                    float x = (float) Math.cos(Math.toRadians(angle + 120 * fraction)) * circleLayout.getRadius();
-//                    float y = (float) Math.sin(Math.toRadians(angle + 120 * fraction)) * circleLayout.getRadius();
 
                     float x = (float) Math.cos(Math.toRadians(angle + 120 * fraction)) * (circleLayout.getRadius() - hideMenuHalfSize * fraction);
                     float y = (float) Math.sin(Math.toRadians(angle + 120 * fraction)) * (circleLayout.getRadius() - hideMenuHalfSize * fraction);
@@ -700,17 +715,13 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
             }
         });
 
-        hideMenu.setDuration(DURATION_SHRINK_ANIMATION);
-        hideMenu.start();
-        ;
     }
 
+    private void initShowMenuAnimation() {
 
-    private void startShowMenuAnimation() {
-
-        final ValueAnimator buttonsAppear = ValueAnimator.ofFloat(0f, 1f);
-        buttonsAppear.setInterpolator(new LinearInterpolator());
-        buttonsAppear.addListener(new AnimatorListenerAdapter() {
+        showMenuAnimation = ValueAnimator.ofFloat(0f, 1f);
+        showMenuAnimation.setInterpolator(new LinearInterpolator());
+        showMenuAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 animationRunning = true;
@@ -726,14 +737,14 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
             @Override
             public void onAnimationEnd(Animator animation) {
                 animationRunning = false;
-
+                isShowing = true;
 //                imShowingMenu.setScaleX(1f);
 //                imShowingMenu.setScaleY(1f);
 
 
             }
         });
-        buttonsAppear.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        showMenuAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 final float fraction = valueAnimator.getAnimatedFraction();
@@ -741,12 +752,9 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
                 for (int i = 0; i < menuItemCount; i++) {
                     float angle = angleStep * (i + 2) - 90;
-//                    float x = (float) Math.cos(Math.toRadians(angle - 120 * fraction)) * circleLayout.getRadius();
-//                    float y = (float) Math.sin(Math.toRadians(angle - 120 * fraction)) * circleLayout.getRadius();
 
                     float x = (float) Math.cos(Math.toRadians(angle - 120 * fraction)) * (circleLayout.getRadius() - hideMenuHalfSize * (1 - fraction));
                     float y = (float) Math.sin(Math.toRadians(angle - 120 * fraction)) * (circleLayout.getRadius() - hideMenuHalfSize * (1 - fraction));
-
 
                     ImageView button = views.get(i);
 
@@ -761,9 +769,20 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
             }
         });
 
-        buttonsAppear.setDuration(DURATION_EXPAND_ANIMATION);
+    }
 
-        buttonsAppear.start();
+
+    private void startHideMenuAnimation() {
+
+        hideMenuAnimation.setDuration(DURATION_SHRINK_ANIMATION);
+        hideMenuAnimation.start();
+
+    }
+
+    private void startShowMenuAnimation() {
+
+        showMenuAnimation.setDuration(DURATION_EXPAND_ANIMATION);
+        showMenuAnimation.start();
         ;
 
     }
@@ -782,6 +801,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         if(animationRunning){
             return;
         }
+        animationRunning = true;
         if(needHidden){
             doPathHideMenuAnimation(x,y);
         }else{
@@ -816,7 +836,8 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
                 imShowingMenu.setScaleY(1f);
 
                 isShowing = false;
-                wm.removeView(showMenuView);
+                //wm.removeView(showMenuView);
+                wm.removeViewImmediate(showMenuView);
                 params.x = params.x + showMenuHalfSize - hideMenuHalfSize;
                 params.y = params.y + showMenuHalfSize - hideMenuHalfSize;
                 wm.addView(hideMenuView, params);
@@ -856,23 +877,19 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         ;
     }
 
+
+
     /**
      *  do bezier path animation
      * @param x  menu center move to screen coordinate x
      * @param y  menu center move to screen coordinate y
      */
     private void doPathAnimation(final int x,final int y) {
-        int controllY = y<params.y?y-150:params.y-150;
-        controllY = controllY<0?0:controllY;
         if (evaluator == null) {
-            //controllY first plan:
-            // Point controll = new Point((x + params.x) / 2, (y + params.y) / 2 - 150);
-            //controll second plan:
-            Point controll = new Point((x + params.x) / 2, controllY);
+            Point controll = getControllPoint(params.x,params.y,x,y);
             evaluator = new BezierEvaluator(controll);
         } else {
-            //evaluator.setControllPoint((x + params.x) / 2, (y + params.y) / 2 - 150);
-            evaluator.setControllPoint((x + params.x) / 2, controllY);
+            evaluator.setControllPoint(getControllPoint(params.x,params.y,x,y));
         }
 
         Point startPosition = new Point(params.x, params.y);
@@ -889,10 +906,10 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
             @Override
             public void onAnimationEnd(Animator animation) {
 
-                //mHanlder.sendEmptyMessageDelayed(WHAT_RECT_TOUCH, ONEHUNDRED_MILLSECOND);
 
                 isShowing = true;
-                wm.removeView(hideMenuView);
+                //wm.removeView(hideMenuView);
+                wm.removeViewImmediate(hideMenuView);
                 //-42
                 params.x = params.x - (showMenuHalfSize - hideMenuHalfSize);
                 params.y = params.y - (showMenuHalfSize - hideMenuHalfSize);
@@ -922,6 +939,47 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         anim.start();
 
 
+    }
+
+
+
+    /**
+     * get PathAnimation ControllPoint
+     * @param curX current x
+     * @param curY current y
+     * @param tarX target X
+     * @param tarY tartgetY
+     * @return controll point
+     */
+    private Point getControllPoint(int curX,int curY,int tarX,int tarY){
+
+        int x = Math.abs(curX-tarX);
+        int y = Math.abs(curY-tarY);
+
+        if(x>y){
+            if(curY < thresholdY  && tarY < thresholdY ){
+                y = Math.max(curY,tarY)+thresholdY;
+            }else if(tarY<thresholdY){
+                y= curY+thresholdY;
+            }else if(curY<thresholdY){
+                y= tarY+thresholdY;
+            }else{
+                y = Math.min(curY,tarY)-thresholdY;
+            }
+            x = (curX+tarX)/2;
+        }else{
+            if(curX - thresholdX <0 && tarX - thresholdX < 0){
+                x = Math.max(curX,tarX)+thresholdX;
+            }else if(tarX<thresholdX){
+                x= curX+thresholdX;
+            }else if(curX<thresholdX){
+                x= tarX+thresholdX;
+            }else{
+                x = Math.min(curX,tarX)-thresholdX;
+            }
+            y = (curY+tarY)/2;
+        }
+        return new Point(x,y);
     }
 
 
