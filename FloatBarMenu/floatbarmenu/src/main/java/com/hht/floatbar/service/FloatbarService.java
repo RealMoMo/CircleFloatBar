@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -379,7 +380,11 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
 
         wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         params = new WindowManager.LayoutParams();
-        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        if(Build.VERSION.SDK_INT>=26){
+            params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }else{
+            params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.gravity = Gravity.LEFT | Gravity.TOP;
         params.x = (int) (displayHeight * 0.9f);

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CircleFloatBar</string>
+    <string name="permission_floating_window">Requires permission to use the floating window</string>
 </resources>

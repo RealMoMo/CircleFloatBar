@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.hht.floatbar.MainActivity">
 
     <TextView
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:textSize="24sp"
         android:text="CircleFloatBar" />
 
     <Button
+        android:onClick="starFloatBar"
+        android:text="Start FloatBar"
+        android:textAllCaps="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_alignParentRight="true"
         android:onClick="executePathAnimation"
         android:text="Path Animation"
         android:textAllCaps="false"
@@ -23,7 +33,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:onClick="jumpToGithub"
-        android:layout_gravity="right|bottom"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_start"
@@ -34,4 +45,4 @@
         app:pressedTranslationZ="30dp"
         app:rippleColor="#0ff" />
 
-</FrameLayout>
+</RelativeLayout>
