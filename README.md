@@ -30,6 +30,8 @@
 </br>3.优化逻辑。
 * Version:1.3.0
 </br>增加无触控，菜单自动吸附到屏幕边缘。
+* Version:1.3.1
+</br>悬浮窗适配。
 
 ### Thanks
 	Everyone who has contributed code and reported issues and pull requests!
