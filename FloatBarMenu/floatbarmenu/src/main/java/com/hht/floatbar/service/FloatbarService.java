@@ -7,7 +7,6 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,7 +17,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,11 +28,9 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.BounceInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 
 import com.hht.floatbar.R;
 import com.hht.floatbar.util.BezierEvaluator;
@@ -47,6 +43,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import androidx.appcompat.widget.AppCompatImageView;
 
 
 /**
@@ -66,7 +64,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     //=========================隐藏菜单view=======================
     private View hideMenuView;
     // 隐藏时显示圆点
-    private ImageView imHidingMenu;
+    private AppCompatImageView imHidingMenu;
     //===========================================================
 
     // 展开菜单view
@@ -74,16 +72,16 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
     // ======================展开Menu上的组件===============
     private CircleLayout circleLayout;
     // 展开式显示圆点
-    private ImageView imShowingMenu;
-    private ImageView imHome;
-    private ImageView imTask;
-    private ImageView imWindows;
-    private ImageView imReturn;
-    private ImageView imWhiteBoard;
-    private ImageView imAnnotation;
+    private AppCompatImageView imShowingMenu;
+    private AppCompatImageView imHome;
+    private AppCompatImageView imTask;
+    private AppCompatImageView imWindows;
+    private AppCompatImageView imReturn;
+    private AppCompatImageView imWhiteBoard;
+    private AppCompatImageView imAnnotation;
 
     //菜单选项的item集合
-    private List<ImageView> views;
+    private List<AppCompatImageView> views;
     //===============================================
 
     //是否移动flag
@@ -302,7 +300,7 @@ public class FloatbarService extends Service implements OnClickListener, OnTouch
         imWhiteBoard = showMenuView.findViewById(R.id.im_whiteboard);
         imAnnotation = showMenuView.findViewById(R.id.im_annotation);
         //设置CirCleLayout 中心View
-        imShowingMenu = new ImageView(this);
+        imShowingMenu = new AppCompatImageView(this);
         imShowingMenu.setId(R.id.circle_centerview);
         imShowingMenu.setImageResource(R.drawable.center_20);
         circleLayout.setCenterView(imShowingMenu);

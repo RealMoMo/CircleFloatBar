@@ -2,14 +2,14 @@ package com.hht.floatbar.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.hht.floatbar.R;
+
+import androidx.annotation.NonNull;
 
 
 /**

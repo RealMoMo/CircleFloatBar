@@ -3,9 +3,6 @@ package com.hht.floatbar.module.web;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebChromeClient;
@@ -16,6 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hht.floatbar.R;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 
 public class WebViewActivity extends AppCompatActivity implements WebContract.IWebView {

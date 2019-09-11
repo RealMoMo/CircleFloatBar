@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context="com.hht.floatbar.MainActivity">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,14 +15,14 @@
         android:textSize="24sp"
         android:text="CircleFloatBar" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:onClick="starFloatBar"
         android:text="Start FloatBar"
         android:textAllCaps="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:layout_alignParentRight="true"
         android:onClick="executePathAnimation"
         android:text="Path Animation"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content" />
 
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:onClick="jumpToGithub"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"

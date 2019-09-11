@@ -3,7 +3,7 @@ package com.hht.floatbar;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.hht.floatbar.module.web.WebViewActivity;
 import com.hht.floatbar.service.FloatbarService;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
