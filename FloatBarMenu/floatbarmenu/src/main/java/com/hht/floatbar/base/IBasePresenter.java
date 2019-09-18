@@ -8,7 +8,7 @@ package com.hht.floatbar.base;
  * Date: 2017-06-20  14:12
  */
 
-public interface BasePresenter {
+public interface IBasePresenter {
     void subscribe();
     void unSubscribe();
 }

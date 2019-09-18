@@ -2,13 +2,13 @@ package com.hht.floatbar.module.web;
 
 import android.app.Activity;
 
-import com.hht.floatbar.base.BasePresenter;
-import com.hht.floatbar.base.BaseView;
+import com.hht.floatbar.base.IBasePresenter;
+import com.hht.floatbar.base.IBaseView;
 
 
 public interface WebContract {
 
-    interface IWebView extends BaseView {
+    interface IWebView extends IBaseView {
         Activity getWebViewContext();
 
         void setGankTitle(String title);
@@ -18,7 +18,7 @@ public interface WebContract {
         void initWebView();
     }
 
-    interface IWebPresenter extends BasePresenter {
+    interface IWebPresenter extends IBasePresenter {
         String getGankUrl();
     }
 }

@@ -1,7 +1,7 @@
 package com.hht.floatbar.module.setting;
 
-import com.hht.floatbar.base.BasePresenter;
-import com.hht.floatbar.base.BaseView;
+import com.hht.floatbar.base.IBasePresenter;
+import com.hht.floatbar.base.IBaseView;
 
 /**
  * @author Realmo
@@ -14,11 +14,11 @@ import com.hht.floatbar.base.BaseView;
 public interface SettingContract {
 
 
-    interface ISettingView extends BaseView {
+    interface ISettingView extends IBaseView {
 
     }
 
-    interface ISettingPresenter extends BasePresenter {
+    interface ISettingPresenter extends IBasePresenter {
 
     }
 }

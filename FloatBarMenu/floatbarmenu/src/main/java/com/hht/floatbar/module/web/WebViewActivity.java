@@ -2,9 +2,7 @@ package com.hht.floatbar.module.web;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -13,13 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hht.floatbar.R;
+import com.hht.floatbar.base.BaseActivity;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
-public class WebViewActivity extends AppCompatActivity implements WebContract.IWebView {
+public class WebViewActivity extends BaseActivity implements WebContract.IWebView {
 
 
 
@@ -31,43 +28,34 @@ public class WebViewActivity extends AppCompatActivity implements WebContract.IW
 
     WebView mWebView;
 
-    private WebContract.IWebPresenter mWebPresenter;
-
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_web_view);
-
-        initView();
-
+    public int layoutId() {
+        return R.layout.activity_web_view;
     }
 
-    private void initView() {
-
+    @Override
+    public void initView() {
         mWebToolbar = findViewById(R.id.web_toolbar);
         mWebTitle = findViewById(R.id.web_title);
         mWebProgressBar = findViewById(R.id.web_progressBar);
         mWebView = findViewById(R.id.web_view);
-
-        mWebPresenter = new WebPresenter(this);
-
-        mWebToolbar.setNavigationOnClickListener(new OnClickListener() {
+        
+        mWebToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        mWebPresenter.subscribe();
+
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mWebPresenter.unSubscribe();
+    public WebContract.IWebPresenter createPresenter() {
+        return new WebPresenter(this);
     }
+
 
     @Override
     public Activity getWebViewContext() {

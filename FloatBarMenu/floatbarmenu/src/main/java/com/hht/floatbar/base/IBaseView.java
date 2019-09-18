@@ -2,5 +2,5 @@ package com.hht.floatbar.base;
 
 
 
-public interface BaseView {
+public interface IBaseView {
 }

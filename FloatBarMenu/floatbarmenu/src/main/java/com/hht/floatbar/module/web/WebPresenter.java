@@ -25,7 +25,9 @@ public class WebPresenter implements WebContract.IWebPresenter {
 
     @Override
     public void unSubscribe() {
-
+        if(mWebView !=null){
+            mWebView = null;
+        }
     }
 
     @Override

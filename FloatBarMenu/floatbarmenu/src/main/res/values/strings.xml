@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">CircleFloatBar</string>
-    <string name="permission_floating_window">Requires permission to use the floating window</string>
+    <string name="permission_floating_window">需求悬浮在应用上方的权限</string>
+    <string name="title_filter_app">过滤不显示悬浮球应用</string>
+    <string name="author_realmo">Author:RealMo</string>
+    <string name="setting_title">设置菜单</string>
+    <string name="start_floatbar">开启悬浮球</string>
+    <string name="path_animation">位移动画</string>
 </resources>

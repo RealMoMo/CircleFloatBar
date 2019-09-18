@@ -1,6 +1,4 @@
-package com.hht.floatbar.module.setting;
-
-import android.widget.TextView;
+package com.hht.floatbar.module.filter;
 
 import com.hht.floatbar.R;
 import com.hht.floatbar.base.BaseActivity;
@@ -11,14 +9,10 @@ import com.hht.floatbar.base.IBasePresenter;
  * @version 1.0.0
  * @name FloatBarMenu
  * @email momo.weiye@gmail.com
- * @time 2019/9/11 11:12
+ * @time 2019/9/18 16:22
  * @describe
  */
-public class SettingActivity extends BaseActivity implements SettingContract.ISettingView {
-
-
-    private TextView mFilterTv;
-
+public class FilterAppActivity extends BaseActivity {
 
 
     @Override
@@ -33,6 +27,6 @@ public class SettingActivity extends BaseActivity implements SettingContract.ISe
 
     @Override
     public IBasePresenter createPresenter() {
-        return new SettingPresenter(this);
+        return null;
     }
 }
