@@ -1,43 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/appbar_setting">
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_setting" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_setting"
-            android:layout_width="match_parent"
-            app:navigationIcon="@mipmap/icon_back"
-            android:fitsSystemWindows="true"
-            android:layout_height="?attr/actionBarSize">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/toolbar_setting_title"
-                android:text="@string/setting_title"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textSize="18sp"/>
-
-        </androidx.appcompat.widget.Toolbar>
-
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_filterapp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/title_filter_app"/>
-
-</LinearLayout>
+</FrameLayout>

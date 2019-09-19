@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_setting"
+    app:startDestination="@id/settingMainFragment">
+
+    <fragment
+        android:id="@+id/settingMainFragment"
+        android:name="com.hht.floatbar.module.setting.fragment.main.SettingMainFragment"
+        android:label="fragment_main_setting"
+        tools:layout="@layout/fragment_main_setting" >
+        <action
+            android:id="@+id/action_settingMainFragment_to_floatBarFilterAppFragment"
+            app:destination="@id/floatBarFilterAppFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/floatBarFilterAppFragment"
+        android:name="com.hht.floatbar.module.setting.fragment.filter.FloatBarFilterAppFragment"
+        android:label="fragment_filter_app"
+        tools:layout="@layout/fragment_filter_app" />
+</navigation>

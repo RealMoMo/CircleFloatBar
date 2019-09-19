@@ -1,10 +1,11 @@
 package com.hht.floatbar.module.setting;
 
-import android.widget.TextView;
+import android.os.Bundle;
 
 import com.hht.floatbar.R;
-import com.hht.floatbar.base.BaseActivity;
-import com.hht.floatbar.base.IBasePresenter;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * @author Realmo
@@ -14,25 +15,15 @@ import com.hht.floatbar.base.IBasePresenter;
  * @time 2019/9/11 11:12
  * @describe
  */
-public class SettingActivity extends BaseActivity implements SettingContract.ISettingView {
-
-
-    private TextView mFilterTv;
-
+public class SettingActivity extends AppCompatActivity  {
 
 
     @Override
-    public int layoutId() {
-        return R.layout.activity_setting;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
     }
 
-    @Override
-    public void initView() {
 
-    }
 
-    @Override
-    public IBasePresenter createPresenter() {
-        return new SettingPresenter(this);
-    }
 }
