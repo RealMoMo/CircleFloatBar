@@ -29,7 +29,10 @@
         </activity>
 
         <activity android:name=".module.web.WebViewActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+
+        <activity android:name=".module.setting.SettingActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
 
         <service
             android:name="com.hht.floatbar.service.FloatbarService"

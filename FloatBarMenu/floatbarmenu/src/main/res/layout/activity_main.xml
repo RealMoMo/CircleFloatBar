@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:onClick="starFloatBar"
         android:text="@string/start_floatbar"
-        android:textAllCaps="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,15 +23,17 @@
         android:layout_alignParentRight="true"
         android:onClick="executePathAnimation"
         android:text="@string/path_animation"
-        android:textAllCaps="false"
         app:layout_constraintStart_toStartOf="@+id/btnStart"
         app:layout_constraintTop_toBottomOf="@+id/btnStart" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        />
+        android:onClick="toSetting"
+        android:text="@string/setting_title"
+        app:layout_constraintStart_toStartOf="@+id/btnStart"
+        app:layout_constraintTop_toBottomOf="@+id/btnPathAnimation" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"

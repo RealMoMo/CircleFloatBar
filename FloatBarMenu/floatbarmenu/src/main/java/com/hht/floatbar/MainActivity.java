@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import com.hht.floatbar.module.setting.SettingActivity;
 import com.hht.floatbar.module.web.WebViewActivity;
 import com.hht.floatbar.service.FloatbarService;
 
@@ -68,4 +69,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void toSetting(View view) {
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
+    }
 }
